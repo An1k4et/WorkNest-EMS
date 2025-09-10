@@ -8,6 +8,9 @@
   An AI-powered Employee Management System built with <b>Spring Boot</b>, <b>Thymeleaf</b>, <b>Spring Security</b>, and <b>AI Chatbot</b>.  
 </p>
 
+
+
+
 WorkNest is an **enterprise-grade Employee Management System** designed to streamline HR operations, department workflows, and employee activities within an organization.  
 It goes beyond a basic CRUD application by incorporating **secure role-based access, real-time updates, and interactive features** to simulate real-world enterprise requirements.
 
