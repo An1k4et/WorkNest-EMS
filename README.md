@@ -41,6 +41,7 @@ It goes beyond a basic CRUD application by incorporating **secure role-based acc
 | **Frontend**        | Thymeleaf, HTML5, CSS3, Bootstrap, JavaScript (ES6) |
 | **Backend**         | Spring Boot (REST APIs, Controllers, Services) |
 | **Security**        | Spring Security (RBAC, authentication & authorization) |
+| **AI**              | Ollama (llama3.2:latest) Model |
 | **Database**        | MySQL with JPA/Hibernate ORM |
 | **Real-Time Updates** | WebSockets for live activity feeds |
 | **Chat Integration** | Reusable chatbot module with JavaScript & CSS |
