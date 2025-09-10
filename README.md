@@ -24,7 +24,7 @@ It goes beyond a basic CRUD application by incorporating **secure role-based acc
 
 ### 🔹 Integrated Chatbot (Global Access)
 - A chatbot integrated across **all application pages** without code duplication.
-- Provides interactive support and guides employees through system actions.
+- Provides query related to employee by interacting with database using RAG (Retrival Augemented Generation).
 - Inspired by enterprise solutions, ensuring **seamless communication** within the app.
 
 ### 🔹 Additional Features
@@ -99,6 +99,24 @@ This makes WorkNest not just a project, but a **miniature enterprise solution** 
 ![Chatbot](screenshots/chatbot.png)
 
 ---
+
+## 🧩 AI Chatbot Architecture
+
+The AI-powered chatbot in **WorkNest** follows a two-step pipeline to provide meaningful, human-readable responses:
+
+1. **User Query → SQL Generation**  
+   - The user types a natural language question (e.g., *"Show me all employees in the IT department who are in Delhi"*).  
+   - The chatbot leverages the **AI model** (via Ollama/LLM) to translate this question into a precise **SQL query**.  
+   - The SQL query is generated based on the **predefined database schema** (tables, columns, relationships).
+
+2. **SQL Execution → Human-Readable Response**  
+   - The generated SQL query is executed on the **WorkNest database**.  
+   - The raw result (e.g., a list of employee IDs and names) is sent back to the AI model.  
+   - The AI then converts this result into a **human-friendly explanation** (e.g., *"There are 12 employees in the IT department located in Delhi"*).  
+
+### 🔄 Flow Diagram (Conceptual)
+![AI](screenshots/dashboard.png)
+
 
 ## 🏆 Learning Outcomes
 
