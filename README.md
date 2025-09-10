@@ -96,7 +96,7 @@ This makes WorkNest not just a project, but a **miniature enterprise solution** 
 ![Employee Requests](screenshots/employee-requests.png)
 
 ### Integrated Chatbot  
-![Chatbot](ai-archtecture.jpg)
+![Chatbot](screenshots/chat-bot.jpg)
 
 ---
 
@@ -115,7 +115,7 @@ The AI-powered chatbot in **WorkNest** follows a two-step pipeline to provide me
    - The AI then converts this result into a **human-friendly explanation** (e.g., *"There are 12 employees in the IT department located in Delhi"*).  
 
 ### 🔄 Flow Diagram (Conceptual)
-![AI](screenshots/dashboard.png)
+![AI](ai-archtecture.jpg)
 
 
 ## 🏆 Learning Outcomes
