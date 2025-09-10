@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/worknest_logo.png" alt="WorkNest Logo" width="150"/>
+  <img src="src/main/resources/static/images/worknest_logo.png" alt="WorkNest Logo" width="150"/>
 </p>
 
 <h1 align="center">WorkNest</h1>
