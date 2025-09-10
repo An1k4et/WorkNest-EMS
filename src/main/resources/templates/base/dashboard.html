@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>EMS Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/left-navigation.css}">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <!-- Chatbot CSS Fragment -->
+    <th:block th:replace="ai/chatbot :: chatbot-css"></th:block>
+</head>
+<body>
+<header th:replace="base/left-navigation :: header"></header>
+<div class="main-container">
+  <nav th:replace="base/left-navigation :: sidebar"></nav>
+  <div class="content-container">
+    <!-- Welcome Section -->
+    <div class="dashboard-welcome">
+      <div class="welcome-header">
+        <div class="welcome-message">
+          <h2>Welcome back, <span>Admin</span>!</h2>
+          <p>Here's what's happening with your team today.</p>
+        </div>
+        <div class="date-display">
+          <i class="far fa-calendar-alt"></i>
+          <span id="current-date">April 19, 2025</span>
+        </div>
+      </div>
+      
+      <div class="quick-actions">
+        <a href="/add-employee" class="action-button">
+          <i class="fas fa-user-plus"></i> Add New Employee
+        </a>
+        <a href="/employee-list" class="action-button">
+          <i class="fas fa-users"></i> View All Employees
+        </a>
+        <a href="/attendance" class="action-button">
+          <i class="fas fa-clipboard-check"></i> Attendance
+        </a>
+        <a href="/payroll" class="action-button">
+          <i class="fas fa-money-bill-wave"></i> Payroll
+        </a>
+      </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <div class="stat-card stat-blue">
+        <div class="stat-header">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="stat-value" th:text="${stats['totalEmployees']}">0</div>
+        <div class="stat-label">Total Employees</div>
+      </div>
+      
+      <div class="stat-card stat-green">
+        <div class="stat-header">
+          <div class="stat-icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="stat-value" th:text="${stats['activeEmployees']}">0</div>
+        <div class="stat-label">Active Employees</div>
+      </div>
+      
+      <div class="stat-card stat-yellow">
+        <div class="stat-header">
+          <div class="stat-icon">
+            <i class="fas fa-user-clock"></i>
+          </div>
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="stat-value" th:text="${stats['onLeaveToday']}">0</div>
+        <div class="stat-label">On Leave Today</div>
+      </div>
+      
+      <div class="stat-card stat-purple">
+        <div class="stat-header">
+          <div class="stat-icon">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="stat-value" th:text="${stats['pendingRequests']}">0</div>
+        <div class="stat-label">Pending Requests</div>
+      </div>
+    </div>
+    
+    <!-- Main Dashboard Section -->
+    <div class="dashboard-main">
+      <!-- Chart Section -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3 class="chart-title">Employee Status Overview</h3>
+          <div class="chart-filters">
+            <button class="chart-filter-btn active">Monthly</button>
+            <button class="chart-filter-btn">Quarterly</button>
+            <button class="chart-filter-btn">Yearly</button>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="employeeChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Recent Activity Section -->
+      <div class="recent-activity">
+        <div class="activity-header">
+  <h3 class="activity-title">Recent Activities</h3>
+  <button id="openPopupBtn" type="button" class="open-popup-btn">➕ Add Activity</button>
+</div>
+
+        <ul class="activity-list" id="activityList">
+		  <!-- Activities will load here -->
+		</ul>
+		<p id="noActivityMsg" style="display:none; text-align:center; color:gray;">
+		  No activity found
+		</p>
+      </div>
+    </div>
+    
+    <!-- Employee Requests Table Section -->
+    <div class="requests-section">
+      <div class="requests-header">
+        <h3 class="requests-title">Employee Requests</h3>
+        <a href="/all-requests" class="view-all">View All Requests</a>
+      </div>
+      
+      <div class="filter-container">
+        <div class="filter-tab active">All Requests</div>
+        <div class="filter-tab">Leave</div>
+        <div class="filter-tab">Equipment</div>
+        <div class="filter-tab">Remote Work</div>
+        <div class="filter-tab">Training</div>
+        <div class="filter-tab">Others</div>
+      </div>
+      
+      <!-- Table View (for larger screens) -->
+      <div class="table-responsive">
+        <table class="requests-table" id="requests-table">
+          <thead>
+            <tr>
+              <th>Request Type</th>
+              <th>Employee</th>
+              <th>Department</th>
+              <th>Date Submitted</th>
+              <th>Duration/Details</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Card View (for mobile screens) -->
+      <div class="request-cards">
+        <div class="request-card">
+          <div class="request-card-header">
+            <div class="request-card-title">
+              <div class="request-icon leave-icon">
+                <i class="fas fa-plane-departure"></i>
+              </div>
+              Leave Request
+            </div>
+            <span class="status-badge status-pending">Pending</span>
+          </div>
+          <div class="request-card-details">
+            <div class="request-card-detail">
+              <span class="detail-label">Employee:</span>
+              <span>Sarah Johnson</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Department:</span>
+              <span>IT Department</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Date Submitted:</span>
+              <span>April 18, 2025</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Duration:</span>
+              <span>April 25-30, 2025</span>
+            </div>
+          </div>
+          <div class="request-card-actions">
+            <button class="action-btn approve-btn">Approve</button>
+            <button class="action-btn reject-btn">Reject</button>
+          </div>
+        </div>
+        
+        <div class="request-card">
+          <div class="request-card-header">
+            <div class="request-card-title">
+              <div class="request-icon equipment-icon">
+                <i class="fas fa-laptop"></i>
+              </div>
+              Equipment
+            </div>
+            <span class="status-badge status-pending">Pending</span>
+          </div>
+          <div class="request-card-details">
+            <div class="request-card-detail">
+              <span class="detail-label">Employee:</span>
+              <span>Robert Wilson</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Department:</span>
+              <span>Marketing</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Date Submitted:</span>
+              <span>April 17, 2025</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Details:</span>
+              <span>New laptop - MacBook Pro</span>
+            </div>
+          </div>
+          <div class="request-card-actions">
+            <button class="action-btn approve-btn">Approve</button>
+            <button class="action-btn reject-btn">Reject</button>
+          </div>
+        </div>
+        
+        <!-- More request cards (abbreviated for mobile) -->
+        <div class="request-card">
+          <div class="request-card-header">
+            <div class="request-card-title">
+              <div class="request-icon remote-icon">
+                <i class="fas fa-home"></i>
+              </div>
+              Remote Work
+            </div>
+            <span class="status-badge status-approved">Approved</span>
+          </div>
+          <div class="request-card-details">
+            <div class="request-card-detail">
+              <span class="detail-label">Employee:</span>
+              <span>Jennifer Lee</span>
+            </div>
+            <div class="request-card-detail">
+              <span class="detail-label">Duration:</span>
+              <span>May 1-15, 2025</span>
+            </div>
+          </div>
+          <div class="request-card-actions">
+            <button class="action-btn view-btn">View</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="request-pagination">
+        <div class="page-info">
+          Showing 1 to 7 of 28 entries
+        </div>
+        <ul class="pagination">
+          <li><button>&laquo;</button></li>
+          <li><button class="active">1</button></li>
+          <li><button>2</button></li>
+          <li><button>3</button></li>
+          <li><button>4</button></li>
+          <li><button>&raquo;</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Popup Modal -->
+<div id="activityPopup" class="popup-overlay">
+  <div class="popup-content">
+    <h3>Add Recent Activity</h3>
+    <textarea id="activityText" rows="3" placeholder="Enter activity..."></textarea>
+    <select id="activityType">
+      <option value="USER_ADD">User Added</option>
+      <option value="LEAVE_REQUEST">Leave Request</option>
+      <option value="PROMOTION">Promotion</option>
+      <option value="EQUIPMENT">Equipment Request</option>
+      <option value="RESIGNATION">Resignation</option>
+    </select>
+    <div class="popup-buttons">
+      <button onclick="sendActivity()">Save</button>
+      <button onclick="closePopup()">Cancel</button>
+    </div>
+  </div>
+</div>
+<!-- Chatbot Widget Fragment -->
+<th:block th:replace="ai/chatbot :: chatbot-widget"></th:block>
+
+<!-- Chatbot JS Fragment -->
+<th:block th:replace="ai/chatbot :: chatbot-js"></th:block>
+
+<script src="/js/left-navigation.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const currentDate = new Date().toLocaleDateString('en-US', dateOptions);
+    document.getElementById('current-date').textContent = currentDate;
+    
+    loadRequests();
+    // Employee Chart - with improved responsiveness
+    const ctx = document.getElementById('employeeChart').getContext('2d');
+    const employeeChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Total Employees',
+          data: [],
+          borderColor: '#007bff',
+          backgroundColor: 'rgba(0, 123, 255, 0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }, {
+          label: 'Active Employees',
+          data: [],
+          borderColor: '#28a745',
+          backgroundColor: 'rgba(40, 167, 69, 0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }, {
+          label: 'On Leave',
+          data: [],
+          borderColor: '#ffc107',
+          backgroundColor: 'rgba(255, 193, 7, 0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              boxWidth: 10,
+              font: {
+                size: function() {
+                  return window.innerWidth < 768 ? 10 : 12;
+                }
+              }
+            }
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            grid: {
+              drawBorder: false,
+            },
+            ticks: {
+              font: {
+                size: function() {
+                  return window.innerWidth < 768 ? 10 : 12;
+                }
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              font: {
+                size: function() {
+                  return window.innerWidth < 768 ? 10 : 12;
+                }
+              },
+              maxRotation: 45,
+              minRotation: 45
+            }
+          }
+        }
+      }
+    });
+    
+    // Handle window resize to make chart responsive
+    window.addEventListener('resize', function() {
+      employeeChart.resize();
+    });
+    
+    // Rest of your existing script...
+    
+    // Filter Tab Functionality
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        // Here you would normally filter the requests table/cards
+      });
+    });
+    
+    // Chart Filter Buttons
+    const chartFilters = document.querySelectorAll('.chart-filter-btn');
+    chartFilters.forEach(btn => {
+      btn.addEventListener('click', function() {
+        chartFilters.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        // Here you would normally update the chart data
+      });
+    });
+    
+    // Action Buttons Functionality
+    const approveButtons = document.querySelectorAll('.approve-btn');
+    const rejectButtons = document.querySelectorAll('.reject-btn');
+    
+    approveButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const row = this.closest('tr') || this.closest('.request-card');
+          // Here you would normally send an AJAX request to approve
+          
+          // For demonstration, we're just updating the UI
+          if (row) {
+            const statusElement = row.querySelector('.status-badge');
+            if (statusElement) {
+              statusElement.className = 'status-badge status-approved';
+              statusElement.textContent = 'Approved';
+            }
+            
+            const actionButtonsContainer = row.querySelector('.action-buttons');
+            if (actionButtonsContainer) {
+              actionButtonsContainer.innerHTML = '<button class="action-btn view-btn">View</button>';
+            }
+          }
+        });
+      });
+      
+      rejectButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const row = this.closest('tr') || this.closest('.request-card');
+          // Here you would normally send an AJAX request to reject
+          
+          // For demonstration, we're just updating the UI
+          if (row) {
+            const statusElement = row.querySelector('.status-badge');
+            if (statusElement) {
+              statusElement.className = 'status-badge status-rejected';
+              statusElement.textContent = 'Rejected';
+            }
+            
+            const actionButtonsContainer = row.querySelector('.action-buttons');
+            if (actionButtonsContainer) {
+              actionButtonsContainer.innerHTML = '<button class="action-btn view-btn">View</button>';
+            }
+          }
+        });
+      });
+      
+      
+      async function loadChartData() {
+    	  const res = await fetch("/monthly"); // your endpoint
+    	  const data = await res.json();
+
+    	  console.log(data);
+    	  employeeChart.data.labels = data.labels;
+    	  employeeChart.data.datasets[0].data = data.totalEmployees;
+    	  employeeChart.data.datasets[1].data = data.activeEmployees;
+    	  employeeChart.data.datasets[2].data = data.onLeave;
+
+    	  employeeChart.update();
+    	}
+
+    	// call once on page load
+    	loadChartData();
+    	
+    	
+    	let socket = new SockJS('/ws');
+        let stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function () {
+            console.log("Connected to WebSocket");
+            stompClient.subscribe('/topic/activities', function (message) {
+                let activity = JSON.parse(message.body);
+                addActivityToUI(activity);
+            });
+        });
+
+        (function () {
+            const overlay = document.getElementById('activityPopup');
+            const txt = document.getElementById('activityText');
+            const type = document.getElementById('activityType');
+
+            function openPopup() {
+              overlay.style.display = 'flex';
+              txt.focus();
+            }
+
+            function closePopup() {
+              overlay.style.display = 'none';
+            }
+
+            function sendActivity() {
+              const text = txt.value.trim();
+              if (!text) { alert('Please enter activity text'); return; }
+
+              const now = new Date();
+              const time = "Today, " + now.toLocaleString('en-US', {
+                hour: '2-digit', minute: '2-digit', hour12: true
+              });
+
+              // UI update
+              addActivityToUI({ text, type: type.value, time });
+
+              // Backend (optional)
+              fetch('/api/activities/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, type: type.value })
+              });
+
+              txt.value = '';
+              type.value = 'USER_ADD';
+              closePopup();
+            }
+
+            // Make available globally ONLY if you still use inline onclick somewhere
+            window.openPopup = openPopup;
+            window.closePopup = closePopup;
+            window.sendActivity = sendActivity;
+
+            // Listeners
+            document.getElementById('openPopupBtn').addEventListener('click', openPopup);
+            document.getElementById('cancelActivityBtn').addEventListener('click', closePopup);
+            document.getElementById('saveActivityBtn').addEventListener('click', sendActivity);
+          })();
+
+        
+        
+        
+        
+        
+  });
+  function formatDateTime(dateTimeStr) {
+	  if (!dateTimeStr) return "Just now"; // fallback if null
+	  let date = new Date(dateTimeStr);
+	  return date.toLocaleString("en-GB", { 
+	      day: "2-digit", 
+	      month: "short", 
+	      year: "numeric", 
+	      hour: "2-digit", 
+	      minute: "2-digit" 
+	  });
+	}
+
+  function addActivityToUI(activity) {
+	  if (!activity || !activity.activityText) return; // stop if blank
+
+	  let ul = document.querySelector(".activity-list");
+
+	  let li = document.createElement("li");
+	  li.classList.add("activity-item");
+
+	  // 🎨 Choose icon/color based on type
+	  let iconClass = "fas fa-bell";
+	  let colorClass = "activity-blue";
+
+	  switch (activity.activityType) {
+	    case "USER_ADD":
+	      iconClass = "fas fa-user-plus";
+	      colorClass = "activity-green";
+	      break;
+	    case "LEAVE_REQUEST":
+	      iconClass = "fas fa-file-alt";
+	      colorClass = "activity-yellow";
+	      break;
+	    case "PROMOTION":
+	      iconClass = "fas fa-user-edit";
+	      colorClass = "activity-blue";
+	      break;
+	    case "EQUIPMENT":
+	      iconClass = "fas fa-laptop";
+	      colorClass = "activity-purple";
+	      break;
+	    case "RESIGNATION":
+	      iconClass = "fas fa-user-minus";
+	      colorClass = "activity-red";
+	      break;
+	  }
+
+	  // 🖼️ Create activity card
+	  li.innerHTML = `
+	    <div class="activity-icon ${colorClass}">
+	      <i class="${iconClass}"></i>
+	    </div>
+	    <div class="activity-content">
+	      <p class="activity-text">${activity.activityText || "No message"}</p>
+	      <p class="activity-time">${formatDateTime(activity.activityTime)}</p>
+	    </div>
+	  `;
+
+	  // Add new activity at TOP
+	  ul.prepend(li);
+	}
+
+  
+  async function loadActivities() {
+  	console.log("FUnction called");
+ 	  let ul = document.getElementById("activityList");
+ 	  let noMsg = document.getElementById("noActivityMsg");
+
+ 	  // Clear old data
+ 	  ul.innerHTML = "";
+
+ 	  // Fetch from backend
+ 	  const response = await fetch("/api/activities");
+ 	  const activities = await response.json();
+
+ 	  console.log(activities);
+ 	  if (activities.length === 0) {
+ 	    noMsg.style.display = "block"; // Show message
+ 	    return;
+ 	  } else {
+ 	    noMsg.style.display = "none";
+ 	  }
+
+ 	  activities.reverse().forEach(activity => {
+ 	    addActivityToUI(activity);
+ 	  });
+ 	}
+
+// Load activities on page load
+  document.addEventListener("DOMContentLoaded", loadActivities);
+  
+  async function loadRequests() {
+	    const response = await fetch("/leave-requests"); // ✅ changed from /api/leave-requests
+	    const requests = await response.json();
+
+	    const tbody = document.querySelector("#requests-table tbody");
+	    tbody.innerHTML = "";
+
+	    requests.forEach(req => {
+	        const row = document.createElement("tr");
+	        row.innerHTML = `
+	            <td>${req.leaveType} Leave</td>
+	            <td>${req.employeeName}</td>
+	            <td>${req.department}</td>
+	            <td>${new Date(req.requestedAt).toLocaleDateString()}</td>
+	            <td>${req.startDate} - ${req.endDate}</td>
+	            <td><span class="status-badge status-${req.status.toLowerCase()}">${req.status}</span></td>
+	            <td>
+	                ${req.status === "PENDING" ? `
+	                  <button onclick="updateStatus(${req.id}, 'approve')" class="action-btn approve-btn">Approve</button>
+	                  <button onclick="updateStatus(${req.id}, 'reject')" class="action-btn reject-btn">Reject</button>
+	                ` : `<button class="action-btn view-btn">View</button>`}
+	            </td>
+	        `;
+	        tbody.appendChild(row);
+	    });
+	}
+
+	async function updateStatus(id, action) {
+	    // ✅ use controller mapping
+	    await fetch(`/leave-requests/${id}/${action}`, { method: "PUT" });
+	    loadRequests();
+	}
+
+  
+</script>
+
+</body>
+</html>

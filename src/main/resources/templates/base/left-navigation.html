@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Left Navigation | WorkNest</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/left-navigation.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" th:fragment="header">
+    <div class="menu-toggle" id="menuToggle">
+      <i class="fas fa-bars"></i>
+    </div>
+    <div class="logo-container">
+      <img src="/images/worknest_logo_transparent.png" alt="WorkNest Logo" />
+      <h1 class="logo-heading">WorkNest</h1>
+    </div>
+    <div class="profile-container">
+      <img src="/images/user.png" alt="Profile Photo" class="profile-photo" id="profilePhoto" />
+      <div class="profile-dropdown">
+        <ul>
+          <li><a th:href="@{/profile}"><i class="fas fa-user"></i> View Profile</a></li>
+          <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container with Sidebar and Content -->
+  <div class="main-container">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar" th:fragment="sidebar">
+      <div class="close-sidebar" id="closeSidebar">
+        <i class="fas fa-times"></i>
+      </div>
+      <div class="sidebar-heading">Main</div>
+      <ul class="sidebar-menu">
+        <li th:class="${activePage == 'dashboard'} ? 'active' : ''">
+        	<a th:href="@{/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-heading">Employee Management</div>
+      <ul class="sidebar-menu">
+        <li th:class="${activePage == 'employee-page'} ? 'active' : ''">
+        	<a th:href="@{/employee-list}"><i class="fas fa-users"></i> Employees List</a>
+        </li>
+        <li sec:authorize="hasAnyAuthority('ADMIN','SUPERADMIN')" th:class="${activePage == 'add-employee'} ? 'active' : ''">
+        	<a th:href="@{/add-employee}"><i class="fas fa-tasks"></i> Add Employee</a>
+        </li>
+        <li sec:authorize="hasAnyAuthority('ADMIN','SUPERADMIN','HR')" th:class="${activePage == 'edit-employee'} ? 'active' : ''">
+        	<a th:href="@{/edit-employee}"><i class="fas fa-edit"></i> Edit Employee</a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-heading">Department Management</div>
+      <ul class="sidebar-menu">
+        <li sec:authorize="hasAnyAuthority('ADMIN','SUPERADMIN')" th:class="${activePage == 'department-list'} ? 'active' : ''">
+        	<a th:href="@{/department-list}" >
+        	<i class="fas fa-building"></i> Department List</a>
+        </li>
+        <li sec:authorize="hasAnyAuthority('ADMIN','SUPERADMIN')">
+        	<a th:href="@{/add-department}"><i class="fas fa-tasks"></i> Add Department</a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-heading">Other</div>
+      <ul class="sidebar-menu">
+        <li  th:class="${activePage == 'apply-leave'} ? 'active' : ''">
+        	<a th:href="@{/apply-leave}"><i class="fas fa-door-open"></i> Apply Leave</a>
+        </li>
+      </ul>
+      <ul class="sidebar-menu">
+        <li sec:authorize="hasAnyAuthority('EMPLOYEE','DEVELOPER','SALES')"  th:class="${activePage == 'employee-request'} ? 'active' : ''">
+        	<a th:href="@{/employee-request}"><i class="fas fa-file-alt"></i> Employee Request</a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-heading">Account</div>
+      <ul class="sidebar-menu">
+        <li th:class="${activePage == 'view-profile'} ? 'active' : ''">
+        <a th:href="@{/profile}"><i class="fas fa-user"></i> Profile</a>
+        </li>
+        <li>
+        	<a sec:authorize="hasAnyAuthority('EMPLOYEE', 'SALES', 'DEVELOPER')" th:href="@{/password-reset}"><i class="fas fa-key"></i> Password Reset</a>
+        </li>
+        <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </nav>
+
+    <!-- Content Area -->
+    <div class="content-container">
+      
+    </div>
+  </div>
+
+  <!-- JavaScript for responsive sidebar -->
+  <script src="/js/left-navigation.js"></script>
+</body>
+</html>

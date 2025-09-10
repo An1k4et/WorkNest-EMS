@@ -1,0 +1,74 @@
+<!-- chatbot.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- CSS Fragment -->
+<th:block th:fragment="chatbot-css">
+    <link rel="stylesheet" th:href="@{/css/chatbot.css}">
+</th:block>
+
+<!-- Widget Fragment -->
+<th:block th:fragment="chatbot-widget">
+    <div class="chatbot-container" id="chatbotContainer">
+        <!-- Toggle Button -->
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <div class="notification-badge" id="notificationBadge" style="display: none;">1</div>
+            <svg class="chatbot-icon" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+        </button>
+
+        <!-- Chat Window -->
+        <div class="chatbot-window" id="chatbotWindow">
+            <!-- Header -->
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="chatbot-info">
+                    <h3>LeadBot</h3>
+                    <p>Online Now</p>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        Hi! 👋 Welcome to our support chat. How can I help you today?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="message-avatar">🤖</div>
+                <div style="display: flex; gap: 4px;">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chatbot-input">
+                <div class="input-group">
+                    <input type="text" id="chatbotInput" placeholder="Type your message..." maxlength="500">
+                    <button class="send-button" id="sendButton">
+                        <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- JS Fragment -->
+<th:block th:fragment="chatbot-js">
+    <script th:src="@{/js/chatbot.js}"></script>
+</th:block>

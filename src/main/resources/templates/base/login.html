@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | WorkNest</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #fff;
+    }
+
+    .left-section {
+      background: #2c3e50;
+      color: white;
+      padding: 40px;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .left-section img {
+      max-width: 140px;
+      margin-bottom: 20px;
+    }
+
+    .left-section h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .left-section p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #dcdde1;
+    }
+
+    .right-section {
+      background: white;
+      width: 50%;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .right-section h2 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .right-section p {
+      color: #7f8c8d;
+      margin-bottom: 25px;
+    }
+
+    .right-section input {
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .right-section button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .right-section button:hover {
+      background-color: #2a80b9;
+    }
+
+    
+    .links {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .links a {
+      color: #3498db;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        max-width: 90%;
+      }
+
+      .left-section,
+      .right-section {
+        width: 100%;
+        padding: 30px;
+      }
+
+      .left-section img {
+        max-width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-section">
+      <img src="/images/worknest_logo.png" alt="WorkNest Logo" />
+      <h1>WorkNest</h1>
+      <p>Manage your employee records, tasks, and HR workflows seamlessly and efficiently.</p>
+    </div>
+    <div class="right-section">
+      <h2>Login</h2>
+      <p>Access your employee dashboard</p>
+      <!-- Messages -->
+		<div th:if="${param.error}" style="color: red; margin-bottom: 15px;">
+		  Invalid username or password
+		</div>
+		
+		<div th:if="${param.logout}" style="color: green; margin-bottom: 15px;">
+		  You have been logged out successfully
+		</div>
+      
+      <form th:action="@{/submit-login}" method="POST">
+        <input type="email" name="username" placeholder="Employee ID" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+
+     
+
+      <div class="links">
+        <a th:href="@{/forget-password}">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+  <script>
+  
+  </script>
+</body>
+</html>

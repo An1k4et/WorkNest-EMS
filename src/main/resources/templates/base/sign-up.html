@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up | WorkNest</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #fff;
+    }
+    .left-section {
+      background: #2c3e50;
+      color: white;
+      padding: 40px;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .left-section img {
+      max-width: 140px;
+      margin-bottom: 20px;
+    }
+    .left-section h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .left-section p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #dcdde1;
+    }
+    .right-section {
+      background: white;
+      width: 50%;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .right-section h2 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    .right-section p {
+      color: #7f8c8d;
+      margin-bottom: 25px;
+    }
+    .right-section input {
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      width: 100%;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .right-section button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    .right-section button:hover {
+      background-color: #2a80b9;
+    }
+    .social-login {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .social-login p {
+      margin-bottom: 10px;
+      color: #888;
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .social-icons a {
+      text-decoration: none;
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      border-radius: 50%;
+      text-align: center;
+      color: white;
+      transition: 0.3s;
+    }
+    .fa-facebook-f { background: #3b5998; }
+    .fa-google     { background: #dd4b39; }
+    .fa-github     { background: #333; }
+    .fa-instagram  { background: #e1306c; }
+    .social-icons a:hover {
+      transform: scale(1.1);
+    }
+    .links {
+      display:flex;
+      margin-top: 17px;
+      justify-content: center;
+    }
+    .links a {
+      color: #3498db;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        max-width: 90%;
+      }
+      .left-section, .right-section {
+        width: 100%;
+        padding: 30px;
+      }
+      .left-section img {
+        max-width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-section">
+      <img src="/images/worknest_logo.png" alt="WorkNest Logo" />
+      <h1>WorkNest</h1>
+      <p>Create and manage employee records, streamline HR processes, and build a more productive workplace.</p>
+    </div>
+    <div class="right-section">
+      <h2>Create Account</h2>
+      <p>Join the WorkNest platform</p>
+      <form>
+        <input type="text" placeholder="Full Name" required />
+        <input type="email" placeholder="Email Address" required />
+        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Confirm Password" required />
+        <button type="submit">Sign Up</button>
+      </form>
+      <div class="social-login">
+        <p>Or sign up with</p>
+        <div class="social-icons">
+          <a href="#" class="fab fa-facebook-f" title="Sign up with Facebook"></a>
+          <a href="#" class="fab fa-google" title="Sign up with Google"></a>
+          <a href="#" class="fab fa-github" title="Sign up with GitHub"></a>
+          <a href="#" class="fab fa-instagram" title="Sign up with Instagram"></a>
+        </div>
+      </div>
+      <div class="links">
+        <p>Already have an account?<p><a th:href="@{/login}"> Login</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

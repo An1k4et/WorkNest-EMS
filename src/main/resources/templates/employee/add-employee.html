@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+  <title>Add Employee</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/left-navigation.css}">
+  <link rel="stylesheet" th:href="@{/css/add-employee.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<header th:replace="base/left-navigation :: header"></header>
+<div class="main-container">
+	<nav th:replace="base/left-navigation :: sidebar"></nav>
+	<div class="content-container">
+	
+	
+	
+	
+	<div class="container">
+        <div class="form-header">
+            <h1>Employee Registration</h1>
+            <p>Please complete all steps to register as an employee</p>
+        </div>
+        
+        <div class="emp-progress-container">
+            <div class="emp-progress-bar">
+                <div class="emp-progress-bar-fill" id="empProgressFill"></div>
+                <div class="step step-1 active">
+                    1
+                    <div class="step-label">Basic Info</div>
+                </div>
+                <div class="step step-2">
+                    2
+                    <div class="step-label">Contact</div>
+                </div>
+                <div class="step step-3">
+                    3
+                    <div class="step-label">Employment</div>
+                </div>
+                <div class="step step-4">
+                    4
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="step step-5">
+                    5
+                    <div class="step-label">Documents</div>
+                </div>
+                <div class="step step-6">
+                    6
+                    <div class="step-label">Banking</div>
+                </div>
+                <div class="step step-7">
+                    7
+                    <div class="step-label">Confirm</div>
+                </div>
+            </div>
+        </div>
+        
+        <form id="employeeRegistrationForm" th:action="@{/save-employee}" method="POST" th:object="${Employee}">
+            <!-- Step 1: Basic Information -->
+            <div class="form-card active" id="step1">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Basic Information</h2>
+                        <p>Please provide your personal details</p>
+                        <span id="error-message-1">Please provide all compulsory details</span>
+                    </div>
+                    
+                   
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName" class="required">First Name</label>
+                            <input type="text" id="firstName" name="firstName" required placeholder="Enter first name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="middleName">Middle Name</label>
+                            <input type="text" id="middleName" name="middleName" placeholder="Enter middle name (if applicable)">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName" class="required">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                    	<div class="form-group">
+                            <label for="email" class="required">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter email address">
+                            <span class="error-message" id="email-error" style="display:none;">Enter valid email</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                    	<div class="form-group">
+                            <label for="password" class="required">Password</label>
+                            <input type="password" id="password" name="password" required placeholder="Enter password">
+                            <span class="error-message" id="password-error" style="display:none;">Password must contain 8 length, At least 1 Uppercase, 1 Lowercase, 1 Special Character, 1 Digit</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password" class="required">Confirm Password</label>
+                            <input type="password" id="confirm-password" required placeholder="Confirm password">
+                            <span class="error-message" id="confirm-password-error" style="display:none;">Password does not match</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob" class="required">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="required">Gender</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="male" name="gender" value="MALE" required>
+                                    <label for="male">Male</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="female" name="gender" value="FEMALE">
+                                    <label for="female">Female</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="other" name="gender" value="OTHER">
+                                    <label for="other">Other</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="maritalStatus" class="required">Marital Status</label>
+                            <select id="maritalStatus" name="maritalStatus" required>
+                                <option value="">Select Marital Status</option>
+                                <option value="SINGLE">Single</option>
+                                <option value="MARRIED">Married</option>
+                                <option value="DIVORCED">Divorced</option>
+                                <option value="WIDOWED">Widowed</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="joinDate" class="required">Date of Joining</label>
+                            <input type="date" id="joinDate" name="joinDate" required>
+                        </div>
+                       
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <div></div> <!-- Empty div for spacing -->
+                    <button type="button" class="btn btn-primary" id="first-page" onclick="nextStep(1)">Next <span class="icon">→</span></button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Contact Information -->
+            <div class="form-card" id="step2">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Contact Information</h2>
+                        <p>Provide your contact details and address</p>
+                        <span id="error-message-2">Please provide all compulsory details</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        
+                        
+                        <div class="form-group">
+                            <label for="phone" class="required">Mobile Number</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Enter mobile number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="altPhone">Alternative Phone</label>
+                            <input type="tel" id="altPhone" name="altPhone" placeholder="Enter alternative phone (if any)">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="address1" class="required">Address Line 1</label>
+                            <input type="text" id="address1" name="address1" required placeholder="Street address, P.O. box, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address2">Address Line 2</label>
+                            <input type="text" id="address2" name="address2" placeholder="Apartment, suite, unit, building, floor, etc.">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city" class="required">City</label>
+                            <input type="text" id="city" name="city" required placeholder="Enter city">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="state" class="required">State/Province</label>
+                            <input type="text" id="state" name="state" required placeholder="Enter state/province">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="zipCode" class="required">Zip/Postal Code</label>
+                            <input type="text" id="zipCode" name="zipCode" required placeholder="Enter zip/postal code">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                     	<div class="form-group">
+                            <label for="nationality">Nationality</label>
+                            <input type="text" id="nationality" name="nationality" placeholder="Enter nationality">
+                        </div>
+                        <div class="form-group">
+                            <label for="country" class="required">Country</label>
+                            <select id="country" name="country" required>
+                                <option value="">Select Country</option>
+                                <option value="us">United States</option>
+                                <option value="ca">Canada</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="au">Australia</option>
+                                <option value="in">India</option>
+                                <!-- Add more countries -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-back" onclick="prevStep(2)"><span class="icon">←</span> Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next <span class="icon">→</span></button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Employment Details -->
+            <div class="form-card" id="step3">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Employment Details</h2>
+                        <p>Provide information about your position and role</p>
+                        <span id="error-message-3">Please provide all compulsory details</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department" class="required">Department</label>
+                            <select id="department" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="HR">Human Resources</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="FINANCE">Finance</option>
+                                <option value="MARKETING">Marketing</option>
+                                <option value="OPERATIONS">Operations</option>
+                                <option value="SALES">Sales</option>
+                                <option value="RD">Research & Development</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="role" class="required">Role</label>
+                            <select id="role" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="SUPERADMIN">Super Admin</option>
+                                <option value="EMPLOYEE">Employee</option>
+                                <option value="SALES">Sales</option>
+                                <option value="DEVELOPER">Developer</option>
+                                <option value="HR">HR</option>
+                            </select>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                            <label for="position" class="required">Job Title/Position</label>
+                            <input type="text" id="position" name="position" required placeholder="Enter job title">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employmentType" class="required">Employment Type</label>
+                            <select id="employmentType" name="employmentType" required>
+                                <option value="">Select Employment Type</option>
+                                <option value="FULLTIME">Full-Time</option>
+                                <option value="PARTTIME">Part-Time</option>
+                                <option value="CONTRACT">Contract</option>
+                                <option value="INTERN">Internship</option>
+                                <option value="TEMP">Temporary</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="workLocation">Work Location</label>
+                            <input type="text" id="workLocation" name="workLocation" placeholder="Enter work location">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="manager">Reporting Manager</label>
+                            <input type="text" id="manager" name="manager" placeholder="Enter manager's name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="salary">Annual Salary</label>
+                            <input type="text" id="salary" name="salary" placeholder="Enter annual salary">
+                            <span class="input-note">This information will be kept confidential</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-back" onclick="prevStep(3)"><span class="icon">←</span> Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next <span class="icon">→</span></button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Educational Background -->
+            <div class="form-card" id="step4">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Educational Background</h2>
+                        <p>Provide information about your education and skills</p>
+                        <span id="error-message-4">Please provide all compulsory details</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="highestEducation" class="required">Highest Education Level</label>
+                            <select id="highestEducation" name="highestEducation" required>
+                                <option value="">Select Education Level</option>
+                                <option value="HIGHSCHOOL">High School Diploma</option>
+                                <option value="ASSOCIATE">Associate Degree</option>
+                                <option value="BACHELOR">Bachelor's Degree</option>
+                                <option value="MASTER">Master's Degree</option>
+                                <option value="DOCTORATE">Doctorate</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fieldOfStudy">Field of Study</label>
+                            <input type="text" id="fieldOfStudy" name="fieldOfStudy" placeholder="Enter major/specialization">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="institution">Institution Name</label>
+                            <input type="text" id="institution" name="institution" placeholder="Enter school/university name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="graduationYear">Year of Completion</label>
+                            <input type="text" id="graduationYear" name="graduationYear" placeholder="Enter year of graduation">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="skills">Skills & Certifications</label>
+                            <textarea id="skills" name="skills" placeholder="List your relevant skills, certifications, and professional qualifications"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-back" onclick="prevStep(4)"><span class="icon">←</span> Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(4)">Next <span class="icon">→</span></button>
+                </div>
+            </div>
+            
+            <!-- Step 5: Documents & Identification -->
+            <div class="form-card" id="step5">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Documents & Identification</h2>
+                        <p>Upload necessary documents and provide identification details</p>
+                        <span id="error-message-5">Please provide all compulsory details</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="idType" class="required">ID Type</label>
+                            <select id="idType" name="idType" required>
+                                <option value="">Select ID Type</option>
+                                <option value="ADHARCARD">Adhar Card</option>
+                                <option value="DRIVERLICENSE">Driver's License</option>
+                                <option value="NATIONALID">National ID Card</option>
+                                <option value="OTHER">Other Government-issued ID</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idNumber" class="required">ID Number</label>
+                            <input type="text" id="idNumber" name="idNumber" required placeholder="Enter ID number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number/Tax ID</label>
+                            <input type="text" id="ssn" name="ssn" placeholder="Enter SSN/Tax ID">
+                            <span class="input-note">This information will be encrypted and stored securely</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profilePhoto">Profile Photo</label>
+                            <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*">
+                            <span class="input-note">Max file size: 2MB. Formats: JPG, PNG</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idDocument" class="required">ID Document Upload</label>
+                            <input type="file" id="idDocument" name="idDocument" required accept=".pdf,.jpg,.jpeg,.png">
+                            <span class="input-note">Upload a scanned copy or clear photo. Max file size: 5MB</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-back" onclick="prevStep(5)"><span class="icon">←</span> Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(5)">Next <span class="icon">→</span></button>
+                </div>
+            </div>
+            
+            <!-- Step 6: Bank Details -->
+            <div class="form-card" id="step6">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Bank Details</h2>
+                        <p>Provide your banking information for payroll</p>
+                        <span id="error-message-6">Please provide all compulsory details</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bankName" class="required">Bank Name</label>
+                            <input type="text" id="bankName" name="bankName" required placeholder="Enter bank name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="branchName">Branch Name</label>
+                            <input type="text" id="branchName" name="branchName" placeholder="Enter branch name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="accountType" class="required">Account Type</label>
+                            <select id="accountType" name="accountType" required>
+                                <option value="">Select Account Type</option>
+                                <option value="CHECKING">Checking</option>
+                                <option value="SAVINGS">Savings</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="accountNumber" class="required">Account Number</label>
+                            <input type="text" id="accountNumber" name="accountNumber" required placeholder="Enter account number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ifscCode" class="required">IFSC Code</label>
+                            <input type="text" id="ifscCode" name="ifscCode" required placeholder="Enter IFSC code">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-back" onclick="prevStep(6)"><span class="icon">←</span> Back</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(6)">Next <span class="icon">→</span></button>
+                </div>
+            </div>
+
+            <!-- Step 7: Confirmation -->
+            <div class="form-card" id="step7">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2>Review & Confirm</h2>
+                        <p>Please verify all information before submission</p>
+                        <span id="error-message-7">Please provide all compulsory details</span>
+                    </div>
+                    
+                    <div id="summaryContent" class="summary-content">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-back" onclick="prevStep(7)"><span class="icon">←</span> Back</button>
+                    <button type="submit" class="btn btn-primary">Submit <span class="icon">✓</span></button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Submission Success Message -->
+        <div class="submission-message" id="successMessage" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h2>Registration Successful!</h2>
+            <p>Thank you for completing the employee registration. Your information has been submitted successfully.</p>
+            <button class="btn btn-primary" onclick="location.reload()">Create New Registration</button>
+        </div>
+    </div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</div>
+</div>
+<script th:src="@{/js/left-navigation.js}"></script>
+ <script>
+ 		
+ 		$("#email").on('input', function(){
+ 			let email = $("#email").val();
+ 			let validEmailPattern =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+ 			if(validEmailPattern){
+ 				$("#email-error").css("display", "none");
+ 				$("#first-page").prop('disabled', false);
+ 			}
+ 			else{
+ 				$("#email-error").css("display", "block");
+ 				$("#first-page").prop('disabled', true);
+ 			}
+ 		});
+ 		$("#password").on('input', function() {
+ 		    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
+ 		    let password = $("#password").val();
+ 		    const isValid = passwordRegex.test(password);
+ 		    if (isValid) {
+ 		    	$("#password-error").css("display", "none");
+ 				$("#first-page").prop('disabled', false);
+ 		    } else {
+ 		    	$("#password-error").css("display", "block");
+ 				$("#first-page").prop('disabled', true);
+ 		    }
+ 		});
+ 		$("#confirm-password").on('input', function() {
+ 		    let password = $("#password").val();
+ 		   let confirmPassword = $("#confirm-password").val();
+ 		    if ((password == confirmPassword) && confirmPassword != "") {
+ 		    	$("#confirm-password-error").css("display", "none");
+ 				$("#first-page").prop('disabled', false);
+ 		    } else {
+ 		    	$("#confirm-password-error").css("display", "block");
+ 				$("#first-page").prop('disabled', true);
+ 		    }
+ 		});
+ 		
+        let currentStep = 1;
+        const totalSteps = 7;
+
+        function updateProgress() {
+            const progressFill = document.getElementById('empProgressFill');
+            // Calculate based on current step position between markers
+            const progressWidth = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = `${progressWidth}%`;
+
+            // Update step markers
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.toggle('completed', index < currentStep - 1);
+                step.classList.toggle('active', index === currentStep - 1);
+            });
+        }
+
+        function validateStep(step) {
+            const currentCard = document.getElementById(`step${step}`);
+            const errorMessage = document.getElementById(`error-message-${step}`);
+            const requiredFields = currentCard.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('error');
+                } else {
+                    field.classList.remove('error');
+                }
+            });
+            if(!isValid){
+              errorMessage.style.display = "block";
+            }
+            else{
+              errorMessage.style.display = "none";
+            }
+
+            return isValid;
+        }
+
+        function nextStep(step) {
+            if (!validateStep(step)) return;
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep++;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            updateProgress();
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep--;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            updateProgress();
+        }
+
+        // Initialize progress bar
+        updateProgress();
+    </script>
+</body>
+</html>

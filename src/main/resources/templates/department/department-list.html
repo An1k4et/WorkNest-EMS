@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+  <title>Department List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/left-navigation.css}">
+  <link rel="stylesheet" th:href="@{/css/add-employee.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+        * {
+	      box-sizing: border-box;
+	    }
+	    
+	    body {
+	      font-family: Arial, sans-serif;
+	      margin: 0;
+	      padding: 0;
+	      background-color: #f5f5f7;
+	    }
+	    
+	    /* Main container styles */
+	    .main-container {
+	      display: flex;
+	      position: relative;
+	    }
+	    
+	    .content-container {
+	      padding: 20px;
+	      margin-left: 250px;
+	      transition: margin-left 0.3s;
+	      width: 100%;
+	    }
+	    .depratment-list-container{
+	      background-color: #fff;
+	      border-radius: 8px;
+	      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	      padding: 25px;
+	      margin-bottom: 30px;
+	      width: 100%;
+	      overflow-x: auto; /* Enable horizontal scrolling on small screens */
+	    }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 1px #3182ce;
+        }
+
+        .search-btn {
+            padding: 10px 20px;
+            background: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .search-btn:hover {
+            background: #2c5aa0;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-select {
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #4a5568;
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #3182ce;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #f7fafc;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            color: #2d3748;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .status-inactive {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-restructuring {
+            background: #fef5e7;
+            color: #dd6b20;
+        }
+
+        .employee-count {
+            font-weight: 600;
+            color: #3182ce;
+        }
+
+        .budget {
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .pagination-info {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #3182ce;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .pagination-btn:hover {
+            background: #f7fafc;
+        }
+
+        @media (max-width: 768px) {
+            .search-section {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filters {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-select {
+                flex: 1;
+                min-width: 0;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header th:replace="base/left-navigation :: header"></header>
+<div class="main-container">
+	<nav th:replace="base/left-navigation :: sidebar"></nav>
+	<div class="content-container">
+	<div class = "depratment-list-container">
+        <h1>Department Directory</h1>
+        
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search departments..." id="searchInput">
+                <button class="search-btn" onclick="searchDepartments()">Search</button>
+            </div>
+            <div class="filters">
+                <select class="filter-select" id="statusFilter" onchange="filterDepartments()">
+                    <option value="">All Status</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="INACTIVE">Inactive</option>
+                    <option value="RESTRUCTURING">Restructuring</option>
+                </select>
+                <select class="filter-select" id="locationFilter" onchange="filterDepartments()">
+                    <option value="">All Locations</option>
+                    <option value="Thane">Thane</option>
+                    <option value="Bandra">Bandra</option>
+                    <option value="New York City">New York City</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="departmentTable">
+                <thead>
+                    <tr>
+                        <th>Department Name</th>
+                        <th>Head of Department</th>
+                        <th>Location</th>
+                        <th>Employee Count</th>
+                        <th>Annual Budget</th>
+                        <th>Established</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="departmentTableBody">
+                    <tr>
+                        <td>Information Technology</td>
+                        <td>Tony Stark</td>
+                        <td>Thane</td>
+                        <td><span class="employee-count">45</span></td>
+                        <td class="budget">$2,500,000</td>
+                        <td>2020-01-15</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Human Resources</td>
+                        <td>Aniruddha Vishwakarma</td>
+                        <td>Thane</td>
+                        <td><span class="employee-count">12</span></td>
+                        <td class="budget">$800,000</td>
+                        <td>2019-03-10</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Finance</td>
+                        <td>Tony Dharamraj</td>
+                        <td>Bandra</td>
+                        <td><span class="employee-count">18</span></td>
+                        <td class="budget">$1,200,000</td>
+                        <td>2018-06-20</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sales</td>
+                        <td>Jayesh Vishwakarma</td>
+                        <td>Thane</td>
+                        <td><span class="employee-count">32</span></td>
+                        <td class="budget">$1,800,000</td>
+                        <td>2019-08-05</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Operations</td>
+                        <td>Karthik Dharamraj</td>
+                        <td>Bandra</td>
+                        <td><span class="employee-count">28</span></td>
+                        <td class="budget">$1,500,000</td>
+                        <td>2021-02-12</td>
+                        <td><span class="status-badge status-restructuring">RESTRUCTURING</span></td>
+                    </tr>
+                    <tr>
+                        <td>Marketing</td>
+                        <td>Sarah Johnson</td>
+                        <td>New York City</td>
+                        <td><span class="employee-count">24</span></td>
+                        <td class="budget">$2,000,000</td>
+                        <td>2020-09-30</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Research & Development</td>
+                        <td>Dr. Emily Chen</td>
+                        <td>Thane</td>
+                        <td><span class="employee-count">15</span></td>
+                        <td class="budget">$3,200,000</td>
+                        <td>2017-11-08</td>
+                        <td><span class="status-badge status-inactive">INACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>Customer Support</td>
+                        <td>Michael Rodriguez</td>
+                        <td>Bandra</td>
+                        <td><span class="employee-count">22</span></td>
+                        <td class="budget">$950,000</td>
+                        <td>2021-05-15</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <div class="pagination-info">
+                Showing <span id="currentRange">1 to 8</span> of <span id="totalCount">8</span>
+            </div>
+            <div class="pagination-controls">
+                <a href="#" class="pagination-btn" onclick="prevPage()">&laquo; prev</a>
+                <a href="#" class="pagination-btn" onclick="nextPage()">next &raquo;</a>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script th:src="@{/js/left-navigation.js}"></script>
+
+</body>
+</html>

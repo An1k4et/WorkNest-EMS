@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" th:href="@{/css/left-navigation.css}">
+    <link rel="stylesheet" th:href="@{/css/add-employee.css}">
+
+    <!-- Chatbot CSS Fragment -->
+    <th:block th:replace="ai/chatbot :: chatbot-css"></th:block>
+</head>
+<body>
+    <!-- Header and Sidebar -->
+    <header th:replace="base/left-navigation :: header"></header>
+    <div class="main-container">
+        <nav th:replace="base/left-navigation :: sidebar"></nav>
+        <div class="content-container">
+            <div class="container">
+                <!-- Page content goes here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Widget Fragment -->
+    <th:block th:replace="ai/chatbot :: chatbot-widget"></th:block>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/left-navigation.js}"></script>
+
+    <!-- Chatbot JS Fragment -->
+    <th:block th:replace="ai/chatbot :: chatbot-js"></th:block>
+</body>
+</html>
