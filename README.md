@@ -96,7 +96,7 @@ This makes WorkNest not just a project, but a **miniature enterprise solution** 
 ![Employee Requests](screenshots/employee-requests.png)
 
 ### Integrated Chatbot  
-![Chatbot](screenshots/chatbot.png)
+![Chatbot](ai-archtecture.jpg)
 
 ---
 
