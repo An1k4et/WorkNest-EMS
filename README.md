@@ -101,7 +101,7 @@ This makes WorkNest not just a project, but a **miniature enterprise solution** 
 ## 📸 Screenshots
 
 ### Dashboard  
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/Dashboard.jpg)
 
 ### Employee Requests with Live Updates  
 ![Employee Requests](screenshots/employee-requests.png)
